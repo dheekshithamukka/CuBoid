@@ -1,17 +1,18 @@
-import React,{useEffect,createContext,useReducer,useContext} from 'react';
+import React, {useEffect,useReducer} from 'react'
 import {BrowserRouter,Route,Switch,useHistory} from 'react-router-dom'
 import Signup from './components/Signup'
 import Login from './components/Login'
 import Home from './components/Home'
 import Profile from './components/Profile'
 import UserProfile from './components/UserProfile'
+import CustomPost from './components/CustomPost'
 import CreatePost from './components/CreatePost'
 import Reset from './components/Reset'
 import NewPassword from './components/NewPassword'
 import Forum from './components/Forum'
 
-
 import {reducer,initialState} from './reducers/userReducer'
+import {createContext, useContext} from 'react'
 
 export const UserContext = createContext()
 
@@ -48,6 +49,9 @@ const Routing = () => {
       </Route>
       <Route path="/profile/:userid">
       <UserProfile />
+      </Route>
+      <Route path="/post/:postId">
+      <CustomPost />
       </Route>
       <Route path="/createpost" >
       <CreatePost />

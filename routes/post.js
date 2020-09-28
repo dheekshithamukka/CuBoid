@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+const { UserContext } = require('../client/src/App')
 const requireLogin = require('../middleware/requireLogin')
 const Post = mongoose.model('Post')
 
@@ -19,6 +20,8 @@ router.get('/allpost',requireLogin, (req,res) => {
         console.log(err)
     })
 })
+
+
 
 
 router.post('/createpost', requireLogin, (req,res) => {
@@ -45,6 +48,7 @@ router.post('/createpost', requireLogin, (req,res) => {
 router.get('/mypost',requireLogin,(req,res) => {
     Post.find({postedBy: req.user._id})
     .populate("postedBy","_id fname lname username")
+    .populate("comments.postedBy", "_id fname lname username")
     .sort('-createdAt')
     .then(mypost => {
         res.json({mypost})
@@ -57,6 +61,7 @@ router.get('/mypost',requireLogin,(req,res) => {
 router.get('/post/:postId',requireLogin,(req,res) => {
     Post.find({_id: req.params.postId})
     .populate("postedBy","_id fname lname username")
+    .populate("comments.postedBy", "_id fname lname username")
     .sort('-createdAt')
     .then(post => {
         res.json({post})

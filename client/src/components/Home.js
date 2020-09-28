@@ -135,19 +135,53 @@ const fetchUsers = (query) => {
 }
 
 
-const openInNewTab = (postId) => {
-    console.log(postId)
-    fetch(`/post/$(postId)`,{
-        method: "get",
-        headers: {
-            "Content-Type": "application/json",
+// const openInNewTab = (postId) => {
+//     console.log(postId)
+//     fetch(`/post/${postId}`,{
+//         method: "get",
+//         headers: {
+//             "Content-Type": "application/json",
+//             "Authorization":"Bearer "+localStorage.getItem("jwt")
+//         },
+//     }).then(res => res.json())
+//     .then(results => {
+//         console.log(results)
+//     })
+// }
+
+
+
+const sharePost = (item) => {
+    // console.log(item.photo)
+    fetch("/createpost",{
+        method:"post",
+        headers:{
+            "Content-Type":"application/json",
             "Authorization":"Bearer "+localStorage.getItem("jwt")
         },
-    }).then(res => res.json())
-    .then(results => {
-        console.log(results)
+        body:JSON.stringify({
+            title: item.title,
+            body: item.body,
+            pic: item.photo
+        })
+    }).then(res=>res.json())
+    .then(data=>{
+
+       if(data.error){
+           console.log(data.error)
+       }
+       else{
+           console.log("Created post successfully!")
+           history.push('/')
+       }
+    }).catch(err=>{
+        console.log(err)
     })
 }
+
+
+
+
 
 
    return (
@@ -193,7 +227,8 @@ const openInNewTab = (postId) => {
                                 :   
                                 <i className="fas fa-thumbs-up" onClick={() => {likePost(item._id)}}></i>
                             }
-                        <button onClick={() => openInNewTab(item._id)}>Open in new tab</button>
+                        <Link to={"/post/"+item._id}><button>Open in new tab</button></Link>
+                        <button onClick={() => sharePost(item)}>Share</button>
                         
                             <h3>{item.likes.length} likes</h3>
                             <h1>{item.title}</h1>
